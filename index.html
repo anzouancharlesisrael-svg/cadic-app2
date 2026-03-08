@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CADIC Logement</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#000;
+    color:white;
+}
+
+header{
+    background:#000;
+    color:#d4af37;
+    padding:15px;
+    text-align:center;
+    font-size:22px;
+    font-weight:bold;
+    border-bottom:2px solid #d4af37;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+header img{
+    width:50px;
+    margin-right:10px;
+}
+
+nav{
+    display:flex;
+    justify-content:space-around;
+    background:#111;
+    padding:10px;
+}
+
+nav button{
+    background:#d4af37;
+    border:none;
+    padding:10px;
+    border-radius:6px;
+    font-weight:bold;
+}
+
+.container{
+    padding:20px;
+}
+
+.card{
+    background:#111;
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:10px;
+    border:1px solid #d4af37;
+}
+
+button.action{
+    background:#d4af37;
+    color:black;
+    border:none;
+    padding:10px;
+    margin-top:10px;
+    border-radius:6px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.page{
+    display:none;
+}
+
+.active{
+    display:block;
+}
+
+input,select{
+    width:100%;
+    padding:8px;
+    margin-top:5px;
+    margin-bottom:10px;
+    border-radius:5px;
+    border:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<img src="logo.png" alt="Logo CADIC">
+<span>CADIC Logement</span>
+</header>
+
+<nav>
+<button onclick="showPage('home')">Accueil</button>
+<button onclick="showPage('absence')">Absence</button>
+<button onclick="showPage('probleme')">Problème</button>
+<button onclick="showPage('parametres')">Paramètres</button>
+</nav>
+
+<div class="container">
+
+<!-- ACCUEIL -->
+<div id="home" class="page active">
+<div class="card">
+<h2>Bienvenue</h2>
+<p>Application de gestion des logements CADIC.</p>
+<p>Vous pouvez signaler une absence ou un problème.</p>
+</div>
+</div>
+
+<!-- ABSENCE -->
+<div id="absence" class="page">
+<div class="card">
+<h2>Signaler une absence</h2>
+<label>Nom</label>
+<input type="text" id="nomAbs">
+<label>Date départ</label>
+<input type="date" id="dateDepart">
+<label>Date retour</label>
+<input type="date" id="dateRetour">
+<button class="action" onclick="alerteAbsence()">Envoyer</button>
+</div>
+</div>
+
+<!-- PROBLEME -->
+<div id="probleme" class="page">
+<div class="card">
+<h2>Signaler un problème</h2>
+<label>Type de problème</label>
+<select id="typeProbleme">
+<option>Plomberie</option>
+<option>Électricité</option>
+<option>Serrure / clé</option>
+<option>Autre</option>
+</select>
+<label>Description</label>
+<input type="text" id="descProbleme">
+<button class="action" onclick="alerteProbleme()">Envoyer</button>
+</div>
+</div>
+
+<!-- PARAMETRES DRH -->
+<div id="parametres" class="page">
+<div class="card">
+<h2>Accès DRH</h2>
+<label>Nom DRH</label>
+<input id="nomdrh" type="text">
+<label>Code d'accès</label>
+<input id="codedrh" type="password">
+<button class="action" onclick="loginDRH()">Se connecter</button>
+
+<h3>Ajouter un autre DRH</h3>
+<label>Nouveau code DRH</label>
+<input id="nouveauCode" type="text">
+<button class="action" onclick="ajouterDRH()">Ajouter DRH</button>
+</div>
+</div>
+
+<!-- AGENDA DRH -->
+<div id="agenda" class="page">
+<div class="card">
+<h2>Agenda du DRH</h2>
+<ul id="listeAgenda">
+<li>12 Avril : Réparation plomberie Maison A</li>
+<li>15 Avril : Changement des clés</li>
+<li>20 Avril : Vérification électricité</li>
+</ul>
+</div>
+</div>
+
+</div>
+
+<script>
+let codesDRH = ["CADICdrh22"]; // code initial DRH
+
+function showPage(page){
+    let pages=document.querySelectorAll(".page");
+    pages.forEach(p=>p.classList.remove("active"));
+    document.getElementById(page).classList.add("active");
+}
+
+function loginDRH(){
+    let code = document.getElementById("codedrh").value;
+    if(codesDRH.includes(code)){
+        showPage("agenda");
+    } else {
+        alert("Code incorrect");
+    }
+}
+
+function ajouterDRH(){
+    let nouveau = document.getElementById("nouveauCode").value;
+    if(nouveau){
+        codesDRH.push(nouveau);
+        alert("Nouveau DRH ajouté : " + nouveau);
+        document.getElementById("nouveauCode").value="";
+    } else {
+        alert("Veuillez entrer un code pour le nouveau DRH");
+    }
+}
+
+function alerteAbsence(){
+    let nom = document.getElementById("nomAbs").value;
+    let dep = document.getElementById("dateDepart").value;
+    let ret = document.getElementById("dateRetour").value;
+    alert("Absence envoyée au DRH : " + nom + " du " + dep + " au " + ret);
+}
+
+function alerteProbleme(){
+    let type = document.getElementById("typeProbleme").value;
+    let desc = document.getElementById("descProbleme").value;
+    alert("Problème envoyé au DRH : " + type + " - " + desc);
+}
+</script>
+
+</body>
+</html>
